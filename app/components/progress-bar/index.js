@@ -3,6 +3,11 @@ import styled from 'styled-components';
 
 const lineWith = 0.18;
 
+function remToPx(rem, round) {
+  const res = rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
+  return round ? Math.round(res) : res;
+};
+
 const Container = styled.div`
   background-color: #565656;
   height: ${lineWith}rem;
@@ -16,21 +21,22 @@ const Bar = styled.div`
 `;
 
 const InnerToggle = styled.div`
-  margin-top: ${lineWith * -2.5}rem;
-  height: ${lineWith * 4}rem;
-  width: ${lineWith * 4}rem;
+  margin-top: ${remToPx(-3.25 * lineWith)}px;
+  height: ${remToPx(lineWith * 5.5)}px;
+  width: ${remToPx(lineWith * 5.5, true)}px;
   border-radius: 50%;
-  border: ${lineWith}rem solid #ffffff;
+  border: ${remToPx(lineWith * 1.5)}px solid #ffffff;
+  background-color: ${props => props.backgroundColor};
 `;
 
 const Margin = styled.div`
-  margin-top: ${lineWith * 2.5}rem;
+  margin-top: ${lineWith * 3.25}rem;
   margin-left: 1rem;
   margin-right: 1rem;
   width: calc(100% - 2rem);
 `;
 
-export default ({ progress }) => (
+export default ({ progress, backgroundColor }) => (
   <Margin>
     <Container>
       <Bar style={{ width: progress + '%' }}>

@@ -23,9 +23,13 @@ const TopLine = styled.div`
 const ImageContainer = styled.div`
     flex-grow: 0;
     flex-basis: content;
+    margin-right: 0.5rem;
 `;
 
 const TextContainer = styled.div`
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
     flex-grow: 1;
     flex-basis: auto;
 `;

@@ -1,3 +1,4 @@
 module.exports = [
-    require('./webpack')
+    require('./static'),
+    require('./webpack'),
 ];

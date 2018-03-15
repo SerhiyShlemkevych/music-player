@@ -2,12 +2,14 @@ import {
   UPDATE_PROGRESS_BAR,
   SET_TRACK,
   PAUSE,
-  RESUME
+  RESUME,
+  PREPARE_SET_TRACK
 } from './constants';
 
-export const setTrack = (track) => ({
+export const setTrack = (track, color) => ({
   type: SET_TRACK,
-  payload: track
+  track,
+  color
 });
 
 export const pause = () => ({
@@ -23,4 +25,8 @@ export const updateProgressBar = (current, duration) => ({
   payload: current / duration * 100
 });
 
+export const prepareSetTrack = (track) => ({
+  type: PREPARE_SET_TRACK,
+  track
+});
 

@@ -13,22 +13,24 @@ const secondsToText = (s) => `${
     : '0' + (Math.round(s % 60) || 0)
   }`;
 
-export default function (state = { 
+export default function (state = {
   currentProgress: 0,
-  imageUrl: '/api/media/noimage/image'
- }, action) {
+  imageUrl: '/api/media/noimage/image',
+  backgroundColor: [0, 0, 0]
+}, action) {
   switch (action.type) {
     case SET_TRACK:
       return {
         ...state,
-        trackUrl: `/api/media/${action.payload.id}`,
-        imageUrl: `/api/media/${action.payload.id}/image`,
-        title: action.payload.title,
-        artist: action.payload.artist.join(),
-        duration: action.payload.duration,
-        durationText: secondsToText(action.payload.duration),
+        trackUrl: `/api/media/${action.track.id}`,
+        imageUrl: `/api/media/${action.track.id}/image`,
+        title: action.track.title,
+        artist: action.track.artist.join(),
+        duration: action.track.duration,
+        durationText: secondsToText(action.track.duration),
         currentProgress: 0,
-        currentProgressText: '0:00'
+        currentProgressText: '0:00',
+        backgroundColor: action.color
       };
     case PAUSE:
       return {

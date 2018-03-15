@@ -7,11 +7,24 @@ import ReactAnimationFrame from 'react-animation-frame';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import reducer from './reducer';
-import { resume, pause, updateProgressBar } from './actions';
+import saga from './saga';
+import { throttle } from 'lodash';
+import {
+    resume,
+    pause,
+    updateProgressBar,
+    updateBlur
+} from './actions';
 import ProgressBar from '../../components/progress-bar';
 import TrackInfo from '../../components/track-info';
 
 const Container = styled.div`
+    z-index: 1000;
+    position: fixed;
+    top: 90vh;
+    bottom: 0;
+    left: 0;
+    right: 0;
     color: white;
     background-position: center;
     background-size: 100%;
@@ -19,26 +32,7 @@ const Container = styled.div`
     display: flex;
     justify-content: center;
     width: 100%;
-`;
-
-const Background = styled.div`
-  width: 200%;
-  height: 400%;
-  margin-left: -25%;
-  margin-top: -10%;
-  background-size: cover;
-  filter: blur(40px) brightness(80%);
-`;
-
-const BackgroundContainer = styled.div`
-    /* background-color: rgba(0,0,0,0.9); */
-    overflow: hidden;
-    z-index: -1;
-    position: absolute;
-    top: 90vh;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    backdrop-filter: blur(30px);
 `;
 
 const ControlsContainer = styled.div`
@@ -54,6 +48,13 @@ const TrackInfoContainer = styled.div`
     height: 100%;
     flex-basis: 30%;
     flex-grow: 0;
+`;
+
+const ButtonsContainer = styled.div`
+    font-size: 2rem;
+    display: flex;
+    flex-basis: 100%;
+    justify-content: center;
 `;
 
 const DurationContainer = styled.div`
@@ -91,6 +92,11 @@ class MiniPlayer extends React.Component {
                 this.audio.duration);
     }
 
+    componentWillUnmount() {
+        this.audio.scrollTop();
+        this.audio = null;
+    }
+
     render() {
         const {
             currentProgressText,
@@ -103,15 +109,15 @@ class MiniPlayer extends React.Component {
             onResumeClick,
             onPauseClick,
             currentProgress,
-            onPlaying
+            onPlaying,
+            backgroundColor = [0, 0, 0]
         } = this.props;
         this.manageAudio(shouldPlay, trackUrl);
 
         return (
-            <Container imageUrl={imageUrl}>
-                <BackgroundContainer >
-                    <Background style={{ backgroundImage: `url(${imageUrl})` }} />
-                </BackgroundContainer>
+            <Container style={{
+                backgroundColor
+            }}>
                 <TrackInfoContainer>
                     <TrackInfo
                         topLine={title}
@@ -120,18 +126,23 @@ class MiniPlayer extends React.Component {
                     />
                 </TrackInfoContainer>
                 <ControlsContainer>
-                    <div onClick={onResumeClick}>resume</div>
-                    <div onClick={onPauseClick}>pause</div>
+                    <ButtonsContainer>
+                        {
+                            shouldPlay
+                                ? (<div className="flaticon-pause" onClick={onPauseClick}></div>)
+                                : (<div className="flaticon-play" onClick={onResumeClick}></div>)
+                        }
+                    </ButtonsContainer>
                     <DurationContainer>
                         <div>{currentProgressText}</div>
-                        <ProgressBar progress={currentProgress} />
+                        <ProgressBar backgroundColor progress={currentProgress} />
                         <div>{durationText}</div>
                     </DurationContainer>
                 </ControlsContainer>
                 <VolumeContainer>
                     <ProgressBar progress={0} />
                 </VolumeContainer>
-            </Container>
+            </Container >
         );
     }
 };
@@ -153,11 +164,13 @@ const mapStateToProps = (state) => {
         artist: state.miniPlayer.artist,
         currentProgress: state.miniPlayer.currentProgress,
         currentProgressText: state.miniPlayer.currentProgressText,
-        durationText: state.miniPlayer.durationText
+        durationText: state.miniPlayer.durationText,
+        backgroundColor: state.miniPlayer.backgroundColor
     };
 };
 
 const widthReducer = injectReducer({ key: 'miniPlayer', reducer });
+const widthSaga = injectSaga({ key: 'miniPlayer', saga });
 
 const withConnect = connect(
     mapStateToProps, {
@@ -168,5 +181,6 @@ const withConnect = connect(
 
 export default compose(
     withConnect,
-    widthReducer
+    widthReducer,
+    widthSaga
 )(MiniPlayer);
