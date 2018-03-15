@@ -1,9 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
+const lineWith = 0.18;
+
 const Container = styled.div`
   background-color: #565656;
-  height: 0.25rem;
+  height: ${lineWith}rem;
   width: 100%;
 `;
 
@@ -14,17 +16,18 @@ const Bar = styled.div`
 `;
 
 const InnerToggle = styled.div`
-  margin-top: -0.6rem;
-  height: 1rem;
-  width: 1rem;
+  margin-top: ${lineWith * -2.5}rem;
+  height: ${lineWith * 4}rem;
+  width: ${lineWith * 4}rem;
   border-radius: 50%;
-  border-width: 0.3rem;
-  border: 0.2rem solid #ffffff;
+  border: ${lineWith}rem solid #ffffff;
 `;
 
 const Margin = styled.div`
-  margin-top: 0.6rem;
-  width: 100%;
+  margin-top: ${lineWith * 2.5}rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  width: calc(100% - 2rem);
 `;
 
 export default ({ progress }) => (

@@ -17,21 +17,9 @@ const Container = styled.div`
     background-size: 100%;
     z-index: 2;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     width: 100%;
 `;
-
-// const Background = styled.div`
-//   position: absolute;
-//   z-index: -1;
-//   top: 80vh;
-//   bottom: 0;
-//   background-image: ${props => `url(${props.imageUrl})`};
-//   background-size: 100%;
-//   width: 150%;
-//   left: -25%;
-//   filter: blur(20px);
-// `
 
 const Background = styled.div`
   width: 200%;
@@ -54,17 +42,29 @@ const BackgroundContainer = styled.div`
 `;
 
 const ControlsContainer = styled.div`
-    width: 40%;
+    height: 100%;
+    flex-basis: 40%;
+    flex-grow: 1;
+    align-self: center;
+    margin-left: auto;
+    margin-right: auto;
+`;
+
+const TrackInfoContainer = styled.div`
+    height: 100%;
+    flex-basis: 30%;
+    flex-grow: 0;
 `;
 
 const DurationContainer = styled.div`
-    width: 100%;
+    font-size: 0.75rem;
     display: flex;
-    justify-content: space-between;
 `;
 
 const VolumeContainer = styled.div`
-    width: 20%;
+    flex-basis: 30%;
+    height: 100%;
+    flex-grow: 0;
 `;
 
 class MiniPlayer extends React.Component {
@@ -112,11 +112,13 @@ class MiniPlayer extends React.Component {
                 <BackgroundContainer >
                     <Background style={{ backgroundImage: `url(${imageUrl})` }} />
                 </BackgroundContainer>
-                <TrackInfo
-                    topLine={title}
-                    bottomLine={artist}
-                    imageUrl={imageUrl}
-                />
+                <TrackInfoContainer>
+                    <TrackInfo
+                        topLine={title}
+                        bottomLine={artist}
+                        imageUrl={imageUrl}
+                    />
+                </TrackInfoContainer>
                 <ControlsContainer>
                     <div onClick={onResumeClick}>resume</div>
                     <div onClick={onPauseClick}>pause</div>

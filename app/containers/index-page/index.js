@@ -7,20 +7,12 @@ import MyMusic from '../my-music';
 
 const playerHeight = '10vh';
 
-const TopRow = styled.div`
-  height: calc(100vh - ${playerHeight});
-  display: flex;
-`;
-
 const ContextPageContainer = styled.div`
-background-color: violet;
 flex-basis: 100%;
 `;
 
-const BottomRow = styled.div`
+const Container = styled.div`
   display: flex;
-  flex-basis: 100%;
-  height: ${playerHeight};
 `;
 
 const LeftColumn = styled.div`
@@ -43,21 +35,16 @@ injectGlobal`
 
 export default function () {
   return (
-    <div>
-      <TopRow>
-        <LeftColumn width={'20%'} >
-          <Menu />
-        </LeftColumn>
-        <RightColumn>
-          <ContextPageContainer>
-            <MyMusic />
-          </ContextPageContainer>
-
-        </RightColumn>
-      </TopRow>
-      <BottomRow>
-        <MiniPlayer />
-      </BottomRow>
-    </div>
+    <Container>
+      <LeftColumn width={'20%'} >
+        <Menu />
+      </LeftColumn>
+      <RightColumn>
+        <ContextPageContainer>
+          <MyMusic />
+        </ContextPageContainer>
+      </RightColumn>
+      <MiniPlayer />
+    </Container>
   );
 };
