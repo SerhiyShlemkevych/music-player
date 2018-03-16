@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 const Container = styled.div`
     width: 10rem;
+    margin: 0.35rem;
 `;
 
 const Image = styled.img`
@@ -11,9 +12,13 @@ const Image = styled.img`
 `;
 
 const Artist = styled.div`
+  white-space: nowrap;
+  overflow: hidden;
 `;
 
 const Title = styled.div`
+    white-space: nowrap;
+    overflow: hidden;
     font-weight: bold;
 `;
 

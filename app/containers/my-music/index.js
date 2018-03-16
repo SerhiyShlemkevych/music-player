@@ -11,11 +11,10 @@ import { prepareSetTrack } from '../mini-player/actions';
 import Track from '../../components/track';
 
 const Container = styled.div`
+    background-color: #ffffff;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
-    height: 100%;
-    overflow-y: scroll;
 `;
 
 class MyMusic extends React.Component {

@@ -1,0 +1,1 @@
+export const getImageUrl = state => `/api/media/${state.imageId}/image`;

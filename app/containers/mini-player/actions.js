@@ -3,7 +3,8 @@ import {
   SET_TRACK,
   PAUSE,
   RESUME,
-  PREPARE_SET_TRACK
+  PREPARE_SET_TRACK,
+  UPDATE_TRACK_LENGTH
 } from './constants';
 
 export const setTrack = (track, color) => ({
@@ -30,3 +31,7 @@ export const prepareSetTrack = (track) => ({
   track
 });
 
+export const updateTrackDuration = (duration) => ({
+  type: UPDATE_TRACK_LENGTH,
+  duration
+});

@@ -3,3 +3,4 @@ export const PAUSE = 'PAUSE';
 export const RESUME = 'RESUME';
 export const UPDATE_PROGRESS_BAR = 'UPDATE_PROGRESS_BAR';
 export const PREPARE_SET_TRACK = 'PREPARE_SET_TRACK';
+export const UPDATE_TRACK_LENGTH = 'UPDATE_TRACK_LENGTH';

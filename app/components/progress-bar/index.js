@@ -39,7 +39,7 @@ const Margin = styled.div`
 export default ({ progress, backgroundColor }) => (
   <Margin>
     <Container>
-      <Bar style={{ width: progress + '%' }}>
+      <Bar style={{ width: `calc(${progress}% - 0.5rem)` }}>
       </Bar>
     </Container>
     <InnerToggle style={{ marginLeft: `calc(${progress}% - 0.5rem)` }} />

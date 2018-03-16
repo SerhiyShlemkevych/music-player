@@ -1,22 +1,30 @@
 import React from 'react';
-import { PropTypes } from 'prop-types';
 import styled from 'styled-components';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import ReactAnimationFrame from 'react-animation-frame';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import reducer from './reducer';
 import saga from './saga';
-import { throttle } from 'lodash';
 import {
     resume,
     pause,
     updateProgressBar,
-    updateBlur
+    updateTrackDuration
 } from './actions';
 import ProgressBar from '../../components/progress-bar';
 import TrackInfo from '../../components/track-info';
+import * as selectors from './selectors';
+
+const BigIcon = styled.div`
+    font-size: 2.3rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+`;
+
+const SmallIcon = styled.div`
+    font-size: 1rem;
+`;
 
 const Container = styled.div`
     z-index: 1000;
@@ -55,6 +63,8 @@ const ButtonsContainer = styled.div`
     display: flex;
     flex-basis: 100%;
     justify-content: center;
+    align-items: center;
+    margin-bottom: -0.2rem;
 `;
 
 const DurationContainer = styled.div`
@@ -87,85 +97,79 @@ class MiniPlayer extends React.Component {
 
     componentDidMount() {
         this.audio = document.createElement('audio');
-        this.audio.ontimeupdate = () =>
-            this.props.onPlaying(this.audio.currentTime,
-                this.audio.duration);
+        this.timeUpdateListner = this.audio.addEventListener(
+            'timeupdate', () =>
+                this.props.onPlaying(this.audio.currentTime,
+                    this.audio.duration));
+        this.durationChangeListner = this.audio.addEventListener(
+            'durationchange',
+            () =>  this.props.updateTrackDuration(this.audio.duration));
     }
 
     componentWillUnmount() {
-        this.audio.scrollTop();
+        this.audio.stop();
+        this.audio.removeEventListener(this.timeUpdateListner);
+        this.audio.removeEventListener(this.durationChangeListner);
         this.audio = null;
     }
 
     render() {
         const {
-            currentProgressText,
-            durationText,
+            progressText,
+            progress,
+            duration,
             shouldPlay,
-            imageUrl,
-            trackUrl,
-            title,
-            artist,
             onResumeClick,
             onPauseClick,
-            currentProgress,
             onPlaying,
-            backgroundColor = [0, 0, 0]
+            track
         } = this.props;
-        this.manageAudio(shouldPlay, trackUrl);
+        this.manageAudio(shouldPlay, track.url);
 
         return (
             <Container style={{
-                backgroundColor
+                backgroundColor:track.color
             }}>
                 <TrackInfoContainer>
                     <TrackInfo
-                        topLine={title}
-                        bottomLine={artist}
-                        imageUrl={imageUrl}
+                        topLine={track.title}
+                        bottomLine={track.artist}
+                        imageUrl={track.imageUrl}
                     />
                 </TrackInfoContainer>
                 <ControlsContainer>
                     <ButtonsContainer>
+                        <SmallIcon><span className="flaticon-previous"></span></SmallIcon>
+                        <BigIcon>
                         {
                             shouldPlay
-                                ? (<div className="flaticon-pause" onClick={onPauseClick}></div>)
-                                : (<div className="flaticon-play" onClick={onResumeClick}></div>)
+                                ? (<div className="flaticon-pause-2" onClick={onPauseClick}></div>)
+                                : (<div className="flaticon-play-2" onClick={onResumeClick}></div>)
                         }
+                        </BigIcon>
+                        <SmallIcon><span className="flaticon-skip"></span></SmallIcon>
                     </ButtonsContainer>
                     <DurationContainer>
-                        <div>{currentProgressText}</div>
-                        <ProgressBar backgroundColor progress={currentProgress} />
-                        <div>{durationText}</div>
+                        <div>{progressText}</div>
+                        <ProgressBar progress={progress} />
+                        <div>{duration}</div>
                     </DurationContainer>
                 </ControlsContainer>
                 <VolumeContainer>
-                    <ProgressBar progress={0} />
+                    <ProgressBar progress={0.5} />
                 </VolumeContainer>
             </Container >
         );
     }
 };
 
-MiniPlayer.propTypes = {
-    shouldPlay: PropTypes.bool,
-    src: PropTypes.string,
-    onResumeClick: PropTypes.func,
-    onPauseClick: PropTypes.func
-};
-
 const mapStateToProps = (state) => {
-    if (!state.miniPlayer) return {};
     return {
-        shouldPlay: state.miniPlayer.shouldPlay,
-        trackUrl: state.miniPlayer.trackUrl,
-        imageUrl: state.miniPlayer.imageUrl,
-        title: state.miniPlayer.title,
-        artist: state.miniPlayer.artist,
-        currentProgress: state.miniPlayer.currentProgress,
-        currentProgressText: state.miniPlayer.currentProgressText,
-        durationText: state.miniPlayer.durationText,
-        backgroundColor: state.miniPlayer.backgroundColor
+        shouldPlay: selectors.getShouldPlay(state),
+        track: selectors.getTrack(state),
+        progress: selectors.getProgress(state),
+        progressText: selectors.getProgressText(state),
+        duration: selectors.getDuration(state)
     };
 };
 
@@ -176,11 +180,12 @@ const withConnect = connect(
     mapStateToProps, {
         onResumeClick: resume,
         onPauseClick: pause,
-        onPlaying: updateProgressBar
+        onPlaying: updateProgressBar,
+        updateTrackDuration
     });
 
 export default compose(
-    withConnect,
+    widthSaga,
     widthReducer,
-    widthSaga
+    withConnect,
 )(MiniPlayer);
