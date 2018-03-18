@@ -10,6 +10,7 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import reducer from './reducer';
 import * as selectors from './selectors';
+import NowPlaying from 'containers/now-playing';
 
 const playerHeight = '10vh';
 
@@ -63,6 +64,7 @@ export class IndexpPage extends React.Component {
 
     return (
       <div>
+        <NowPlaying />
         <Background style={{ backgroundImage: `url(${imageUrl})` }} />
         <Container>
           <LeftColumn width={'20%'} >

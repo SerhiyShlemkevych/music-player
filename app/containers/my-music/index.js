@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import { startLoadLibrary } from './actions';
-import { prepareSetTrack } from '../mini-player/actions';
+import { setNowPlaying } from '../now-playing/actions';
 import Track from '../../components/track';
 
 const Container = styled.div`
@@ -43,7 +43,7 @@ class MyMusic extends React.Component {
 
 const mapDispatchToProps = (dispatch) => ({
     onMount: () => dispatch(startLoadLibrary()),
-    onItemClick: (item) => dispatch(prepareSetTrack(item))
+    onItemClick: (item) => dispatch(setNowPlaying([item]))
 });
 
 const mapStateToProps = (state) => ({

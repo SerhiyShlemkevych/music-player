@@ -6,6 +6,7 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import reducer from './reducer';
 import * as selectors from './selectors';
+import { showNowPlaying } from '../now-playing/actions';
 
 const Container = styled.div`
     position: relative;
@@ -18,7 +19,7 @@ export class Menu extends React.Component {
     render() {
         return (
             <Container>
-                {'some text'}
+                <button onClick={this.props.showNowPlaying}> now </button>
             </Container>
         );
     }
@@ -30,7 +31,11 @@ const mapStateToProps = (state) => ({
     imageUrl: selectors.getImageUrl(state)
 });
 
-const withConnect = connect(mapStateToProps);
+const mapDispatchToProps = {
+    showNowPlaying
+};
+
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(
     withReducer,

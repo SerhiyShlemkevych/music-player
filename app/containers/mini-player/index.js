@@ -1,20 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
-import { compose } from 'redux';
 import { connect } from 'react-redux';
-import injectReducer from 'utils/injectReducer';
-import injectSaga from 'utils/injectSaga';
-import reducer from './reducer';
-import saga from './saga';
 import {
-    resume,
-    pause,
+    playNowPlaying,
+    pauseNowPlaying,
     updateProgressBar,
     updateTrackDuration
-} from './actions';
+} from '../now-playing/actions';
 import ProgressBar from '../../components/progress-bar';
 import TrackInfo from '../../components/track-info';
-import * as selectors from './selectors';
+
+import * as selectors from '../now-playing/selectors';
 
 const BigIcon = styled.div`
     font-size: 2.3rem;
@@ -27,7 +23,6 @@ const SmallIcon = styled.div`
 `;
 
 const Container = styled.div`
-    z-index: 1000;
     position: fixed;
     top: 90vh;
     bottom: 0;
@@ -79,73 +74,37 @@ const VolumeContainer = styled.div`
 `;
 
 class MiniPlayer extends React.Component {
-    manageAudio(shouldPlay, src) {
-        if (!this.audio) {
-            return;
-        }
 
-        if (src && !this.audio.src.includes(src)) {
-            this.audio.src = src;
-            this.audio.load();
-        }
-        if (shouldPlay && this.audio.src && this.audio.paused) {
-            this.audio.play();
-        } else if (!shouldPlay && !this.audio.paused) {
-            this.audio.pause();
-        }
-    }
-
-    componentDidMount() {
-        this.audio = document.createElement('audio');
-        this.timeUpdateListner = this.audio.addEventListener(
-            'timeupdate', () =>
-                this.props.onPlaying(this.audio.currentTime,
-                    this.audio.duration));
-        this.durationChangeListner = this.audio.addEventListener(
-            'durationchange',
-            () =>  this.props.updateTrackDuration(this.audio.duration));
-    }
-
-    componentWillUnmount() {
-        this.audio.stop();
-        this.audio.removeEventListener(this.timeUpdateListner);
-        this.audio.removeEventListener(this.durationChangeListner);
-        this.audio = null;
-    }
 
     render() {
         const {
             progressText,
             progress,
             duration,
-            shouldPlay,
-            onResumeClick,
-            onPauseClick,
-            onPlaying,
-            track
+            isNowPlaying,
+            track,
+            playNowPlaying,
+            pauseNowPlaying
         } = this.props;
-        this.manageAudio(shouldPlay, track.url);
 
         return (
             <Container style={{
-                backgroundColor:track.color
+                backgroundColor: track.color || 'rgba(0,0,0,0.1)'
             }}>
                 <TrackInfoContainer>
                     <TrackInfo
-                        topLine={track.title}
-                        bottomLine={track.artist}
-                        imageUrl={track.imageUrl}
+                        track={track}
                     />
                 </TrackInfoContainer>
                 <ControlsContainer>
                     <ButtonsContainer>
                         <SmallIcon><span className="flaticon-previous"></span></SmallIcon>
                         <BigIcon>
-                        {
-                            shouldPlay
-                                ? (<div className="flaticon-pause-2" onClick={onPauseClick}></div>)
-                                : (<div className="flaticon-play-2" onClick={onResumeClick}></div>)
-                        }
+                            {
+                                isNowPlaying
+                                    ? (<div className="flaticon-pause-2" onClick={pauseNowPlaying}></div>)
+                                    : (<div className="flaticon-play-2" onClick={playNowPlaying}></div>)
+                            }
                         </BigIcon>
                         <SmallIcon><span className="flaticon-skip"></span></SmallIcon>
                     </ButtonsContainer>
@@ -165,27 +124,20 @@ class MiniPlayer extends React.Component {
 
 const mapStateToProps = (state) => {
     return {
-        shouldPlay: selectors.getShouldPlay(state),
-        track: selectors.getTrack(state),
+        isNowPlaying: selectors.getIsNowPlaying(state),
+        track: selectors.getCurrentTrack(state),
         progress: selectors.getProgress(state),
         progressText: selectors.getProgressText(state),
         duration: selectors.getDuration(state)
     };
 };
 
-const widthReducer = injectReducer({ key: 'miniPlayer', reducer });
-const widthSaga = injectSaga({ key: 'miniPlayer', saga });
+const mapDispatchToProps = {
+    playNowPlaying,
+    pauseNowPlaying
+};
 
-const withConnect = connect(
-    mapStateToProps, {
-        onResumeClick: resume,
-        onPauseClick: pause,
-        onPlaying: updateProgressBar,
-        updateTrackDuration
-    });
-
-export default compose(
-    widthSaga,
-    widthReducer,
-    withConnect,
-)(MiniPlayer);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps)
+    (MiniPlayer);

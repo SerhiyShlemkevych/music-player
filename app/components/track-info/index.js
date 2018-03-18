@@ -15,9 +15,13 @@ const Container = styled.div`
 
 const BottomLine = styled.div`
     font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
 `;
 
 const TopLine = styled.div`
+    white-space: nowrap;
+    overflow: hidden;
 `;
 
 const ImageContainer = styled.div`
@@ -34,14 +38,14 @@ const TextContainer = styled.div`
     flex-basis: auto;
 `;
 
-export default ({ bottomLine, topLine, imageUrl }) => (
+export default ({ track }) => (
     <Container>
         <ImageContainer>
-            <Image src={imageUrl} />
+            <Image src={track.imageUrl} />
         </ImageContainer>
         <TextContainer>
-            <TopLine> {topLine} </TopLine>
-            <BottomLine> {bottomLine} </BottomLine>
+            <TopLine> {track.title} </TopLine>
+            <BottomLine> {track.artist} </BottomLine>
         </TextContainer>
     </Container>
 );

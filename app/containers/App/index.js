@@ -9,9 +9,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
-import { Switch, Route } from 'react-router-dom';
-
-
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import IndexPage from 'containers/index-page';
 
 export default function App() {
@@ -25,5 +23,5 @@ export default function App() {
       </Helmet>
       <IndexPage />
     </div>
-  );
-};
+      );
+    };
