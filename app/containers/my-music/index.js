@@ -6,8 +6,16 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
-import { startLoadLibrary } from './actions';
-import { setNowPlaying } from '../now-playing/actions';
+import {
+    startLoadLibrary,
+    showAddButtons,
+    hideAddButtons
+} from './actions';
+import {
+    setNowPlaying,
+    addToNowPlaying,
+    playNowPlaying
+} from '../now-playing/actions';
 import Track from '../../components/track';
 
 const Container = styled.div`
@@ -19,32 +27,48 @@ const Container = styled.div`
 
 class MyMusic extends React.Component {
     componentDidMount() {
-        this.props.onMount();
+        this.props.startLoadLibrary();
     }
 
     render() {
-        const { library, onItemClick } = this.props;
+        const {
+            library,
+            showAddButtons,
+            hideAddButtons,
+            addToNowPlaying,
+            setNowPlaying
+        } = this.props;
 
         return (
             <Container>
-                {library.map(item => (
-                    <Track
-                        onClick={() => onItemClick(item)}
-                        key={item.id}
-                        title={item.title || item.filePath}
-                        artist={(item.artist && item.artist.join()) || ''}
-                        imageUrl={`/api/media/${item.id}/image`}
-                    />
-                ))}
+                {
+                    library.map(item => (
+                        <Track
+                            key={item.id}
+                            track={{
+                                title: item.title || item.filePath,
+                                artist: (item.artist && item.artist.join()) || '',
+                                imageUrl: `/api/media/${item.id}/image`,
+                                isHover: item.isHover
+                            }}
+                            onMouseEnter={() => showAddButtons(item)}
+                            onMouseLeave={() => hideAddButtons(item)}
+                            onAddClick={() => addToNowPlaying([item])}
+                            onPlayClick={() => setNowPlaying([item], undefined, true)}
+                        />
+                    ))}
             </Container>
         );
     }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-    onMount: () => dispatch(startLoadLibrary()),
-    onItemClick: (item) => dispatch(setNowPlaying([item]))
-});
+const mapDispatchToProps = {
+    startLoadLibrary,
+    showAddButtons,
+    hideAddButtons,
+    setNowPlaying,
+    addToNowPlaying
+};
 
 const mapStateToProps = (state) => ({
     library: state.library

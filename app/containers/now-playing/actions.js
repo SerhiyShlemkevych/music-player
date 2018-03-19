@@ -26,11 +26,12 @@ export const removeFromNowPlaying = (trackList) => ({
     trackList
 });
 
-export const setNowPlaying = (trackList, track) => ({
+export const setNowPlaying = (trackList, track, autoplay = false) => ({
     type: PREPARE_TRACK_LIST,
     nextType: SET_NOW_PLAYING,
     trackList,
-    track
+    track,
+    autoplay
 });
 
 export const playNowPlaying = () => ({
@@ -42,11 +43,11 @@ export const pauseNowPlaying = () => ({
 });
 
 export const nextNowPlaying = () => ({
-    type: PLAY_NOW_PLYING
+    type: NEXT_NOW_PLAYING
 });
 
 export const prevNowPlaying = () => ({
-    type: PLAY_NOW_PLYING
+    type: PREV_NOW_PLAYING
 });
 
 export const showNowPlaying = () => ({

@@ -106,6 +106,19 @@ const Icon = styled.div`
     margin-right: 2.5rem;
 `;
 
+const ListContainer = styled.div`
+    margin-top: 2rem;
+    width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    display: flex;
+    flex-flow: column;
+`;
+
+const Track = styled.div`
+    color: #fff;
+`;
+
 export class NowPlaying extends React.Component {
     manageAudio(shouldPlay, src) {
         if (!this.audio) {
@@ -165,6 +178,7 @@ export class NowPlaying extends React.Component {
             isVisible,
             hideNowPlaying,
             track,
+            trackList,
             isNowPlaying,
             progressText,
             progress,
@@ -201,6 +215,13 @@ export class NowPlaying extends React.Component {
                             <Icon><span className="flaticon-skip-1"></span></Icon>
                         </ButtonsContainer>
                     </PlayerContainer>
+                    <ListContainer>
+                        {trackList.map(track => (
+                            <Track key={track.id}>
+                                {track.title}
+                            </Track>
+                        ))}
+                    </ListContainer>
                 </Container>
             ),
             (

@@ -5,7 +5,9 @@ import {
     playNowPlaying,
     pauseNowPlaying,
     updateProgressBar,
-    updateTrackDuration
+    updateTrackDuration,
+    prevNowPlaying,
+    nextNowPlaying
 } from '../now-playing/actions';
 import ProgressBar from '../../components/progress-bar';
 import TrackInfo from '../../components/track-info';
@@ -84,7 +86,9 @@ class MiniPlayer extends React.Component {
             isNowPlaying,
             track,
             playNowPlaying,
-            pauseNowPlaying
+            pauseNowPlaying,
+            prevNowPlaying,
+            nextNowPlaying
         } = this.props;
 
         return (
@@ -98,7 +102,9 @@ class MiniPlayer extends React.Component {
                 </TrackInfoContainer>
                 <ControlsContainer>
                     <ButtonsContainer>
-                        <SmallIcon><span className="flaticon-previous"></span></SmallIcon>
+                        <SmallIcon onClick={prevNowPlaying}>
+                            <span className="flaticon-previous"></span>
+                        </SmallIcon>
                         <BigIcon>
                             {
                                 isNowPlaying
@@ -106,7 +112,9 @@ class MiniPlayer extends React.Component {
                                     : (<div className="flaticon-play-2" onClick={playNowPlaying}></div>)
                             }
                         </BigIcon>
-                        <SmallIcon><span className="flaticon-skip"></span></SmallIcon>
+                        <SmallIcon onClick={nextNowPlaying}>
+                            <span className="flaticon-skip"></span>
+                        </SmallIcon>
                     </ButtonsContainer>
                     <DurationContainer>
                         <div>{progressText}</div>
@@ -128,13 +136,15 @@ const mapStateToProps = (state) => {
         track: selectors.getCurrentTrack(state),
         progress: selectors.getProgress(state),
         progressText: selectors.getProgressText(state),
-        duration: selectors.getDuration(state)
+        duration: selectors.getDuration(state),
     };
 };
 
 const mapDispatchToProps = {
     playNowPlaying,
-    pauseNowPlaying
+    pauseNowPlaying,
+    prevNowPlaying,
+    nextNowPlaying
 };
 
 export default connect(

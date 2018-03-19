@@ -21,7 +21,7 @@ const defaultState = {
     duration: '0:00',
     progress: 0,
     progressText: '0:00',
-    isVisible: true
+    isVisible: false
 };
 
 export default (state = defaultState, action) => {
@@ -52,7 +52,7 @@ export default (state = defaultState, action) => {
                     ...state,
                     trackList: [
                         ...state.trackList,
-                        action.trackList
+                        ...action.trackList
                     ]
                 };
             } else {
@@ -78,7 +78,8 @@ export default (state = defaultState, action) => {
             return {
                 ...state,
                 trackList: action.trackList,
-                track: action.track || action.trackList[0] || {}
+                track: action.track || action.trackList[0] || {},
+                isNowPlaying: action.autoplay
             };
         };
         case PLAY_NOW_PLAYING:
@@ -105,7 +106,7 @@ export default (state = defaultState, action) => {
         };
         case NEXT_NOW_PLAYING: {
             const index = state.trackList.indexOf(state.track);
-            return index < trackList.length - 1
+            return index < state.trackList.length - 1
                 ? {
                     ...state,
                     track: state.trackList[index + 1]

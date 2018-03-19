@@ -8,7 +8,7 @@ import { setNowPlaying } from './actions';
 import axios from 'axios';
 import * as Vibrant from 'node-vibrant';
 
-export function* prepareTrackList({ trackList, nextType }) {
+export function* prepareTrackList({ trackList, nextType, autoplay, track }) {
     trackList = yield Promise.all(trackList.map((track) => {
         return track.color
             ? Promise.resolve(track)
@@ -23,7 +23,9 @@ export function* prepareTrackList({ trackList, nextType }) {
     }));
     yield put({
         type: nextType,
-        trackList
+        trackList,
+        track,
+        autoplay
     });
 };
 

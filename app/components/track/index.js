@@ -6,9 +6,10 @@ const Container = styled.div`
     margin: 0.35rem;
 `;
 
-const Image = styled.img`
-    width: 100%;
-    height: auto;
+const Image = styled.div`
+    width: 10rem;
+    height: 10rem;
+    background-size: cover;
 `;
 
 const Artist = styled.div`
@@ -22,10 +23,58 @@ const Title = styled.div`
     font-weight: bold;
 `;
 
-export default ({ imageUrl, title, artist, onClick }) => (
-    <Container onClick={onClick}>
-        <Image src={imageUrl} />
-        <Title>{title}</Title>
-        <Artist>{artist}</Artist>
-    </Container>
-);
+const ButtonsContainer = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+const Button = styled.div`
+    margin: 0.2rem;
+    cursor: pointer;
+    width: 3rem;
+    height: 3rem;
+    background-color: #303030;
+    color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 1.3rem;
+    line-height: 3rem;
+`;
+
+export default ({ track,
+    onMouseLeave,
+    onMouseEnter,
+    onPlayClick,
+    onAddClick
+}) => {
+    const boxShadow = track.isHover
+        ? '0px 10px 63px -15px rgba(0,0,0,0.75)'
+        : undefined;
+    const buttonsContainer = track.isHover
+    ? (
+        <ButtonsContainer>
+                    <Button onClick={onPlayClick} className="flaticon-play" />
+                    <Button onClick={onAddClick} className="flaticon-eject" />
+                </ButtonsContainer>
+    )
+    : '';
+
+    return (
+        <Container 
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        >
+            <Image style={{
+                backgroundImage: `url(${track.imageUrl})`,
+                boxShadow
+            }}>
+                {buttonsContainer}
+            </Image>
+            <Title>{track.title}</Title>
+            <Artist>{track.artist}</Artist>
+        </Container>
+    )
+};
